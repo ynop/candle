@@ -69,7 +69,7 @@ class TrainingLog(object):
 
             ax.legend(loc='upper right')
 
-            plt.savefig(os.path.join(path, '{}.png'.format(name)), bbox_inches='tight')
+            plt.savefig(os.path.join(path, '{}.pdf'.format(name)), bbox_inches='tight')
 
     def save_metric_plots_at(self, path):
         """
@@ -107,7 +107,7 @@ class TrainingLog(object):
 
                 ax.legend(loc='upper right')
 
-            plt.savefig(os.path.join(path, '{}.png'.format(name)), bbox_inches='tight')
+            plt.savefig(os.path.join(path, '{}.pdf'.format(name)), bbox_inches='tight')
 
     def write_stats_to(self, path):
         with open(path, 'w') as f:
