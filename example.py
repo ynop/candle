@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG,
 #   Define some metrics
 #
 class MSEMetric(candle.Metric):
-    def compute(self, output, target):
+    def compute(self, output, target, model=None):
         return np.power(output - target, 2).mean()
 
     def cumulate(self, metric_values=[]):
@@ -33,7 +33,7 @@ class MSEMetric(candle.Metric):
 
 
 class FrameAccuracyMetric(candle.Metric):
-    def compute(self, output, target):
+    def compute(self, output, target, model=None):
         output_maxes = output.topk(1, 1)[1]
         target_maxes = target.topk(1, 1)[1]
 
