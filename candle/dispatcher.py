@@ -66,7 +66,7 @@ class Dispatcher(object):
         else:
             return self.do_compute_losses(losses, output, batch)
 
-    def compute_metrics(self, metrics, output, batch):
+    def compute_metrics(self, metrics, output, batch, model):
         """
         Compute the metrics for the given output and batch data.
 
@@ -74,12 +74,13 @@ class Dispatcher(object):
             - metrics : List of tuples (metric-name, metric-instance)
             - output : The output returned from the forward function
             - batch : The batch processed with the prepare_batch function
+            - model : The pytorch model
         """
 
         if self.compute_metrics_func is not None:
-            return self.compute_metrics_func(metrics, output, batch)
+            return self.compute_metrics_func(metrics, output, batch, model=model)
         else:
-            return self.do_compute_metrics(metrics, output, batch)
+            return self.do_compute_metrics(metrics, output, batch, model=model)
 
     def do_prepare_batch(self, batch, use_cuda=True):
         data = batch
@@ -102,8 +103,8 @@ class Dispatcher(object):
 
         return [loss_func(output, target) for __, loss_func in losses]
 
-    def do_compute_metrics(self, metrics, output, batch):
+    def do_compute_metrics(self, metrics, output, batch, model=None):
         output = output.data
         target = batch[1].data
 
-        return [metric.compute(output, target) for __, metric in metrics]
+        return [metric.compute(output, target, model=model) for __, metric in metrics]

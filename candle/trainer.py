@@ -138,7 +138,7 @@ class Trainer(object):
         self._optimizer.step()
 
         batch_log.loss = [x.data[0] for x in losses]
-        batch_log.metrics = self.dispatcher.compute_metrics(self._metrics, output, batch)
+        batch_log.metrics = self.dispatcher.compute_metrics(self._metrics, output, batch, self._model)
 
         self._callback_handler.notify_after_train_batch(epoch_index, batch_index, batch_log)
 
@@ -162,7 +162,7 @@ class Trainer(object):
         losses = self.dispatcher.compute_losses(self._loss_funcs, output, batch)
 
         batch_log.loss = [x.data[0] for x in losses]
-        batch_log.metrics = self.dispatcher.compute_metrics(self._metrics, output, batch)
+        batch_log.metrics = self.dispatcher.compute_metrics(self._metrics, output, batch, self._model)
 
         self._callback_handler.notify_after_evaluate_batch(batch_index, batch_log)
 

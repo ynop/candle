@@ -5,7 +5,7 @@ class Metric(object):
     The result of a metric can have multiple values/columns.
     """
 
-    def compute(self, output, batch):
+    def compute(self, output, batch, model=None):
         """ Return the computed metrics as single number or list/tuple of values. """
         pass
 
