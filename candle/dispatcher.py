@@ -52,19 +52,19 @@ class Dispatcher(object):
         else:
             return self.do_forward(model, batch)
 
-    def compute_losses(self, losses, output, batch):
+    def compute_losses(self, targets, output, batch):
         """
         Compute the losses for the given output and batch data.
 
         Arguments:
-            - losses : List of tuples (loss-name, loss-function)
+            - targets : List of targets to compute
             - output : The output returned from the forward function
             - batch : The batch processed with the prepare_batch function
         """
         if self.compute_losses_func is not None:
-            return self.compute_losses_func(losses, output, batch)
+            return self.compute_losses_func(targets, output, batch)
         else:
-            return self.do_compute_losses(losses, output, batch)
+            return self.do_compute_losses(targets, output, batch)
 
     def compute_metrics(self, metrics, output, batch, model):
         """
@@ -98,10 +98,21 @@ class Dispatcher(object):
     def do_forward(self, model, batch):
         return model.forward(batch[0])
 
-    def do_compute_losses(self, losses, output, batch):
-        target = batch[1]
+    def do_compute_losses(self, targets, output, batch):
+        losses = []
 
-        return [loss_func(output, target) for __, loss_func in losses]
+        for target in targets:
+            if target.output_index >= 0:
+                output_data = output[target.output_index]
+            else:
+                output_data = output
+
+            target_data = batch[target.target_index]
+
+            loss = target.loss_fn(output_data, target_data)
+            losses.append(loss)
+
+        return losses
 
     def do_compute_metrics(self, metrics, output, batch, model=None):
         output = output.data

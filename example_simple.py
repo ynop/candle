@@ -8,58 +8,11 @@ import torch
 from torch import optim
 from torch.utils import data
 
-import numpy as np
-
 import candle
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(message)s',
                     datefmt='%Y/%m/%d %H:%M:%S')
-
-
-#
-#   Define some metrics
-#
-class MSEMetric(candle.Metric):
-    def compute(self, output, target, model=None):
-        return np.power(output - target, 2).mean()
-
-    def cumulate(self, metric_values=[]):
-        return np.array(metric_values).mean()
-
-    @classmethod
-    def columns(cls):
-        return ['error']
-
-
-class FrameAccuracyMetric(candle.Metric):
-    def compute(self, output, target, model=None):
-        output_maxes = output.topk(1, 1)[1]
-        target_maxes = target.topk(1, 1)[1]
-
-        cmp = target_maxes.eq(output_maxes)
-
-        total = cmp.size(0)
-        correct = cmp.sum()
-
-        return total, correct, correct / total
-
-    def cumulate(self, metric_values=[]):
-        data = np.stack(metric_values).T
-
-        total = data[0].sum()
-        correct = data[1].sum()
-        accuracy = correct / total
-
-        return total, correct, accuracy
-
-    @classmethod
-    def plotable_columns(cls):
-        return ["accuracy"]
-
-    @classmethod
-    def columns(cls):
-        return ["total", "correct", "accuracy"]
 
 #
 #   Define data
@@ -97,20 +50,13 @@ test_loader = data.DataLoader(test_ds, batch_size=10, shuffle=False)
 #
 #   Training
 #
-learning_rate = 1e-4
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = optim.Adam(model.parameters(), lr=1e-3)
 mse = torch.nn.MSELoss()
-mse2 = torch.nn.MSELoss()
-
-frame_accuracy_metric = FrameAccuracyMetric()
-mse_metric = MSEMetric()
 
 trainer = candle.Trainer(model, optimizer,
-                         targets=[candle.Target('MSE', mse), candle.Target('MSE2', mse2)],
+                         targets=[candle.Target('MSE', mse)],
                          num_epochs=3,
-                         use_cuda=False,
-                         callbacks=[],
-                         metrics={'frame_accuracy': frame_accuracy_metric, 'mse': mse_metric})
+                         use_cuda=False)
 
 train_log = trainer.train(train_loader, dev_loader)
 

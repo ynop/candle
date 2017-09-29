@@ -1,3 +1,5 @@
+from torch import autograd
+
 from . import callback
 from . import log
 from . import dispatcher
@@ -22,13 +24,11 @@ class Trainer(object):
         callback.LoggerCallback
     ]
 
-    def __init__(self, model, optimizer, loss_funcs={}, num_epochs=10, use_cuda=True, callbacks=[], metrics={}, dispatcher=dispatcher.Dispatcher()):
+    def __init__(self, model, optimizer, targets=[], num_epochs=10, use_cuda=True, callbacks=[], metrics={}, dispatcher=dispatcher.Dispatcher()):
         self._model = model
         self._optimizer = optimizer
 
-        self._loss_funcs = list(loss_funcs.items())
-        self._loss_names = [x[0] for x in self._loss_funcs]
-
+        self._targets = targets
         self._metrics = list(metrics.items())
 
         self._num_epochs = num_epochs
@@ -50,7 +50,7 @@ class Trainer(object):
             - dev_loader : PyTorch loader that provides validation data.
 
         """
-        train_log = log.TrainingLog(losses=self._loss_names, metrics=self._metrics)
+        train_log = log.TrainingLog(targets=self._targets, metrics=self._metrics)
 
         self._callback_handler.notify_before_train(train_log)
 
@@ -71,7 +71,7 @@ class Trainer(object):
         Arguments:
             - test_loader : PyTorch loader that provides evaluation data.
         """
-        iteration_log = log.IterationLog(losses=self._loss_names, metrics=self._metrics)
+        iteration_log = log.IterationLog(targets=self._targets, metrics=self._metrics)
 
         self._callback_handler.notify_before_evaluate(iteration_log)
 
@@ -96,7 +96,7 @@ class Trainer(object):
             - train_loader : PyTorch loader that provides training data.
             - dev_loader : PyTorch loader that provides validation data.
         """
-        iteration_log = log.IterationLog(losses=self._loss_names, metrics=self._metrics)
+        iteration_log = log.IterationLog(targets=self._targets, metrics=self._metrics)
 
         self._model.train()
         self._callback_handler.notify_before_train_epoch(epoch_index, iteration_log)
@@ -131,9 +131,9 @@ class Trainer(object):
 
         output = self.dispatcher.forward(self._model, batch)
 
-        losses = self.dispatcher.compute_losses(self._loss_funcs, output, batch)
-        loss = self.cumulate_losses(losses)
-        loss.backward()
+        losses = self.dispatcher.compute_losses(self._targets, output, batch)
+        grads = [ls.data.new(1).fill_(1) for ls in losses]
+        autograd.backward(losses, grads)
 
         self._optimizer.step()
 
@@ -159,7 +159,7 @@ class Trainer(object):
         batch_log = log.BatchLog()
 
         output = self.dispatcher.forward(self._model, batch)
-        losses = self.dispatcher.compute_losses(self._loss_funcs, output, batch)
+        losses = self.dispatcher.compute_losses(self._targets, output, batch)
 
         batch_log.loss = [x.data[0] for x in losses]
         batch_log.metrics = self.dispatcher.compute_metrics(self._metrics, output, batch, self._model)

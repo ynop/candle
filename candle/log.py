@@ -18,14 +18,14 @@ class TrainingLog(object):
         - epochs : list of iteration logs for every epoch
 
     Arguments:
-        - losses : list of loss-names that are going to be logged (index will be used for mapping).
+        - targets : list of targets that are going to be logged (index will be used for mapping).
         - metrics : list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
     """
 
-    def __init__(self, losses=[], metrics=[]):
+    def __init__(self, targets=[], metrics=[]):
         self.epochs = []
 
-        self._losses = losses
+        self._targets = targets
         self._metrics = metrics
 
     def append_epoch_log(self, epoch_log):
@@ -61,7 +61,7 @@ class TrainingLog(object):
         train_losses_y = np.concatenate(train_losses_y_per_epoch, 1)
 
         for i in range(np.size(train_losses_y, 0)):
-            name = self._losses[i]
+            name = self._targets[i].name
 
             fig, ax = plt.subplots(figsize=(15, 13), dpi=80)
             ax.plot(train_loss_x, train_losses_y[i], label='Train')
@@ -131,17 +131,17 @@ class IterationLog(object):
         - dev_log : Holds the evaluation log (for training iterations only)
 
     Arguments:
-        - losses : list of loss-names that are going to be logged (index will be used for mapping).
+        - targets : list of targets that are going to be logged (index will be used for mapping).
         - metrics : list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
     """
 
-    __slots__ = ['dev_log', 'batches', '_losses', '_metrics']
+    __slots__ = ['dev_log', 'batches', '_targets', '_metrics']
 
-    def __init__(self, losses=[], metrics=[]):
+    def __init__(self, targets=[], metrics=[]):
         self.dev_log = None
         self.batches = []
 
-        self._losses = losses
+        self._targets = targets
         self._metrics = metrics
 
     def append_batch_log(self, batch_log):
@@ -219,7 +219,9 @@ class IterationLog(object):
             ...
         }
         """
-        return dict(zip(self._losses, self.mean_loss(recent=recent)))
+        target_names = [target.name for target in self._targets]
+
+        return dict(zip(target_names, self.mean_loss(recent=recent)))
 
     def mean_metrics_with_names(self):
         """
@@ -257,7 +259,7 @@ class IterationLog(object):
 
         for index, values in enumerate(self.loss_values()):
             data = np.array(values)
-            name = 'loss_{}'.format(self._losses[index])
+            name = 'loss_{}'.format(self._targets[index].name)
 
             np.save(os.path.join(path, name), data)
 

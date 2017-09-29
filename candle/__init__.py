@@ -1,5 +1,7 @@
 from .trainer import Trainer
 
+from .target import Target
+
 from .dispatcher import Dispatcher
 
 from .log import TrainingLog
