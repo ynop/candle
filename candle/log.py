@@ -87,7 +87,7 @@ class TrainingLog(object):
         train_step = len(self.epochs) / len(train[0])
         train_indices = np.arange(train_step, len(self.epochs) + train_step, train_step)
 
-        for index, (name, metric) in enumerate(self._metrics):
+        for index, metric in enumerate(self._metrics):
             fig, ax = plt.subplots(figsize=(15, 13), dpi=80)
 
             columns = metric.columns()
@@ -107,7 +107,7 @@ class TrainingLog(object):
 
                 ax.legend(loc='upper right')
 
-            plt.savefig(os.path.join(path, '{}.pdf'.format(name)), bbox_inches='tight')
+            plt.savefig(os.path.join(path, '{}.pdf'.format(metric.name)), bbox_inches='tight')
 
     def write_stats_to(self, path):
         with open(path, 'w') as f:
@@ -206,7 +206,7 @@ class IterationLog(object):
             ...
         ]
         """
-        return [self._metrics[i][1].cumulate(x) for i, x in enumerate(self.metric_values())]
+        return [self._metrics[i].cumulate(x) for i, x in enumerate(self.metric_values())]
 
     def mean_loss_with_names(self, recent=-1):
         """
@@ -234,7 +234,7 @@ class IterationLog(object):
             ...
         }
         """
-        return dict(zip([x[0] for x in self._metrics], self.mean_metrics()))
+        return dict(zip([x.name for x in self._metrics], self.mean_metrics()))
 
     def mean_metrics_with_objects(self):
         """
@@ -242,8 +242,8 @@ class IterationLog(object):
 
         e.g.
         [
-            (("frame_accuracy", instance FrameMetric), (4, 2, 0.5)),
-            (("squared_error", instance SquareMetric), 0.34),
+            (instance FrameMetric, (4, 2, 0.5)),
+            (instance SquareMetric, 0.34),
             ...
         ]
         """
@@ -253,7 +253,7 @@ class IterationLog(object):
         """ Save metrics and losses in the given directory. One loss/metric per file. """
         for index, values in enumerate(self.metric_values()):
             data = np.array(values)
-            name = 'metric_{}'.format(self._metrics[index][0])
+            name = 'metric_{}'.format(self._metrics[index].name)
 
             np.save(os.path.join(path, name), data)
 
@@ -281,13 +281,13 @@ class IterationLog(object):
         lines.append('METRICS')
 
         for metric, metric_value in self.mean_metrics_with_objects():
-            columns = metric[1].columns()
+            columns = metric.columns()
 
             if type(metric_value) not in (tuple, list):
                 metric_value = [metric_value]
 
             stats_string = ' / '.join(['{} = {}'.format(columns[x], metric_value[x]) for x in range(len(columns))])
-            lines.append('  - {} : {}'.format(metric[0], stats_string))
+            lines.append('  - {} : {}'.format(metric.name, stats_string))
 
         if self.dev_log is not None:
             lines.append('VALIDATION')

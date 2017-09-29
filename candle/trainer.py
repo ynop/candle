@@ -24,12 +24,12 @@ class Trainer(object):
         callback.LoggerCallback
     ]
 
-    def __init__(self, model, optimizer, targets=[], num_epochs=10, use_cuda=True, callbacks=[], metrics={}, dispatcher=dispatcher.Dispatcher()):
+    def __init__(self, model, optimizer, targets=[], num_epochs=10, use_cuda=True, callbacks=[], metrics=[], dispatcher=dispatcher.Dispatcher()):
         self._model = model
         self._optimizer = optimizer
 
         self._targets = targets
-        self._metrics = list(metrics.items())
+        self._metrics = metrics
 
         self._num_epochs = num_epochs
         self._use_cuda = use_cuda

@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.DEBUG,
 #
 class MSEMetric(candle.Metric):
     def compute(self, output, target, model=None):
-        return np.power(output - target, 2).mean()
+        return torch.pow(output - target, 2).mean()
 
     def cumulate(self, metric_values=[]):
         return np.array(metric_values).mean()
@@ -102,15 +102,17 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 mse = torch.nn.MSELoss()
 mse2 = torch.nn.MSELoss()
 
-frame_accuracy_metric = FrameAccuracyMetric()
-mse_metric = MSEMetric()
+metrics = [
+    FrameAccuracyMetric('frame_accuracy'),
+    MSEMetric('mse')
+]
 
 trainer = candle.Trainer(model, optimizer,
                          targets=[candle.Target('MSE', mse), candle.Target('MSE2', mse2)],
                          num_epochs=3,
                          use_cuda=False,
                          callbacks=[],
-                         metrics={'frame_accuracy': frame_accuracy_metric, 'mse': mse_metric})
+                         metrics=metrics)
 
 train_log = trainer.train(train_loader, dev_loader)
 

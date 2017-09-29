@@ -71,7 +71,7 @@ class Dispatcher(object):
         Compute the metrics for the given output and batch data.
 
         Arguments:
-            - metrics : List of tuples (metric-name, metric-instance)
+            - metrics : List of metrics
             - output : The output returned from the forward function
             - batch : The batch processed with the prepare_batch function
             - model : The pytorch model
@@ -115,7 +115,17 @@ class Dispatcher(object):
         return losses
 
     def do_compute_metrics(self, metrics, output, batch, model=None):
-        output = output.data
-        target = batch[1].data
+        metric_results = []
 
-        return [metric.compute(output, target, model=model) for __, metric in metrics]
+        for metric in metrics:
+            if metric.output_index >= 0:
+                output_data = output[metric.output_index].data
+            else:
+                output_data = output.data
+
+            target_data = batch[metric.target_index].data
+
+            result = metric.compute(output_data, target_data, model=model)
+            metric_results.append(result)
+
+        return metric_results
