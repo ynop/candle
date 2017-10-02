@@ -11,4 +11,5 @@ from .log import BatchLog
 from .metric import Metric
 
 from .callback import Callback
-from .callback import LoggerCallback
+
+from . import callbacks

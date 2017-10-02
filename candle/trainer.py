@@ -3,6 +3,7 @@ from torch import autograd
 from . import callback
 from . import log
 from . import dispatcher
+from . import callbacks
 
 
 class Trainer(object):
@@ -21,7 +22,7 @@ class Trainer(object):
     """
 
     default_callbacks = [
-        callback.LoggerCallback
+        callbacks.LoggerCallback
     ]
 
     def __init__(self, model, optimizer, targets=[], num_epochs=10, use_cuda=True, callbacks=[], metrics=[], dispatcher=dispatcher.Dispatcher()):
