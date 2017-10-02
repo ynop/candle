@@ -23,8 +23,7 @@ class AdaptiveLearningRateCallback(callback.Callback):
     def before_train_epoch(self, epoch_index, epoch_log):
         self.current_epoch_log = epoch_log
 
-        epochs_passed = epoch_index + 1
-        new_lr = self.initial_lr * (self.change ** (epochs_passed // self.num_epochs))
+        new_lr = self.initial_lr * (self.change ** (epoch_index // self.num_epochs))
 
-        for param_group in self._trainer._optimizer:
+        for param_group in self._trainer._optimizer.param_groups:
             param_group['lr'] = new_lr

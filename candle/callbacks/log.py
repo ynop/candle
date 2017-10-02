@@ -34,8 +34,13 @@ class LoggerCallback(callback.Callback):
     def before_train_epoch(self, epoch_index, epoch_log):
         super(LoggerCallback, self).before_train_epoch(epoch_index, epoch_log)
 
+        lrates = []
+
+        for param_group in self._trainer._optimizer.param_groups:
+            lrates.append(str(param_group['lr']))
+
         logging.info("#" * 50)
-        logging.info("Epoch {} / {}".format(epoch_index + 1, self._trainer._num_epochs))
+        logging.info("Epoch {} / {} / Learing-Rates {}".format(epoch_index + 1, self._trainer._num_epochs, ', '.join(lrates)))
         logging.info("#" * 50)
 
     def after_train_epoch(self, epoch_index, epoch_log):
