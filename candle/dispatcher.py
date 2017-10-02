@@ -109,7 +109,7 @@ class Dispatcher(object):
 
             target_data = batch[target.target_index]
 
-            loss = target.loss_fn(output_data, target_data)
+            loss = target.loss_fn(output_data, target_data) * target.weight
             losses.append(loss)
 
         return losses
