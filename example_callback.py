@@ -54,7 +54,8 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 mse = torch.nn.MSELoss()
 
 callbacks = [
-    candle.callbacks.AdaptiveLearningRateCallback(initial_learning_rate=0.01, change=0.1, num_epochs=1)
+    candle.callbacks.AdaptiveLearningRateCallback(initial_learning_rate=0.01, change=0.1, num_epochs=1),
+    candle.callbacks.ModelCheckpointCallback('model_checkpoints', after_num_epochs=1, after_num_batches=25)
 ]
 
 trainer = candle.Trainer(model, optimizer,

@@ -40,7 +40,7 @@ class LoggerCallback(callback.Callback):
             lrates.append(str(param_group['lr']))
 
         logging.info("#" * 50)
-        logging.info("Epoch {} / {} / Learing-Rates {}".format(epoch_index + 1, self._trainer._num_epochs, ', '.join(lrates)))
+        logging.info("Epoch {} / {} (Learing-Rates {})".format(epoch_index + 1, self._trainer._num_epochs, ', '.join(lrates)))
         logging.info("#" * 50)
 
     def after_train_epoch(self, epoch_index, epoch_log):
