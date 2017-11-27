@@ -8,8 +8,5 @@ from .log import TrainingLog
 from .log import IterationLog
 from .log import BatchLog
 
-from .metric import Metric
-
-from .callback import Callback
-
-from . import callbacks
+from .metrics import Metric
+from .callbacks import Callback

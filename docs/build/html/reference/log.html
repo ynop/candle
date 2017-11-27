@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.log &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="candle.callbacks" href="callback.html"/>
+        <link rel="prev" title="candle.Target" href="target.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="trainer.html">candle.Trainer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dispatcher.html">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target.html">candle.Target</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">candle.log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#traininglog">TrainingLog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iterationlog">IterationLog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batchlog">BatchLog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callback.html">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>candle.log</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/log.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="candle-log">
+<h1>candle.log<a class="headerlink" href="#candle-log" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="traininglog">
+<h2>TrainingLog<a class="headerlink" href="#traininglog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="candle.TrainingLog">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">TrainingLog</code><span class="sig-paren">(</span><em>targets=[]</em>, <em>metrics=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#TrainingLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.TrainingLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores log data for a training run.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>targets</strong> (<em>list</em>) – list of targets that are going to be logged (index will be used for mapping).</li>
+<li><strong>metrics</strong> (<em>list</em>) – list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><p class="first last"><strong>epochs</strong> (<em>list</em>) – list of iteration logs for every epoch</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="candle.TrainingLog.save_in_folder">
+<code class="descname">save_in_folder</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#TrainingLog.save_in_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.TrainingLog.save_in_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save log data in the given folder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.TrainingLog.save_loss_plots_at">
+<code class="descname">save_loss_plots_at</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#TrainingLog.save_loss_plots_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.TrainingLog.save_loss_plots_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a plot as png for every loss function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.TrainingLog.save_metric_plots_at">
+<code class="descname">save_metric_plots_at</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#TrainingLog.save_metric_plots_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.TrainingLog.save_metric_plots_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a plot as png for every metric.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="iterationlog">
+<h2>IterationLog<a class="headerlink" href="#iterationlog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="candle.IterationLog">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">IterationLog</code><span class="sig-paren">(</span><em>targets=[]</em>, <em>metrics=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores log data for one training or evaluation iteration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>targets</strong> (<em>list</em>) – list of targets that are going to be logged (index will be used for mapping).</li>
+<li><strong>metrics</strong> (<em>list</em>) – list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batches</strong> (<em>list</em>) – list of batch logs</li>
+<li><strong>dev_log</strong> (<a class="reference internal" href="#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – Holds the evaluation log (for training iterations only)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="candle.IterationLog.loss_values">
+<code class="descname">loss_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.loss_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.loss_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of concatenated loss values. Every tuple in the list contains NUM_BATCHES values of one loss.</p>
+<p>e.g.
+[</p>
+<blockquote>
+<div>(0.2,0.19,0.15,…), # loss index 0
+(0.2,0.19,0.15,…), # loss index 1
+…</div></blockquote>
+<p>]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.mean_loss">
+<code class="descname">mean_loss</code><span class="sig-paren">(</span><em>recent=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.mean_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.mean_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with means of all losses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recent</strong> (<em>-</em>) – if &gt; 0, use only [recent] number of batches.</td>
+</tr>
+</tbody>
+</table>
+<p>e.g.
+[</p>
+<blockquote>
+<div>0.2,    # loss 0
+0.32,   # loss 1
+…</div></blockquote>
+<p>]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.mean_loss_with_names">
+<code class="descname">mean_loss_with_names</code><span class="sig-paren">(</span><em>recent=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.mean_loss_with_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.mean_loss_with_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict with means of losses with name as key.</p>
+<p>e.g.
+{</p>
+<blockquote>
+<div>“MSE” : 0.2,
+“BCE” : 0.32,
+…</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.mean_metrics">
+<code class="descname">mean_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.mean_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.mean_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with cumulated metric values.</p>
+<p>e.g.
+[</p>
+<blockquote>
+<div>(4, 2, 0.5),    # metric 0
+0.34,           # metric 1
+…</div></blockquote>
+<p>]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.mean_metrics_with_names">
+<code class="descname">mean_metrics_with_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.mean_metrics_with_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.mean_metrics_with_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict with cumulated metrics with name as key.</p>
+<p>e.g.
+{</p>
+<blockquote>
+<div>“frame_accuracy” : (4, 2, 0.5),
+“squared_error” : 0.34,
+…</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.mean_metrics_with_objects">
+<code class="descname">mean_metrics_with_objects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.mean_metrics_with_objects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.mean_metrics_with_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with tuples ((metric_name, metric_instance), metric_mean).</p>
+<p>e.g.
+[</p>
+<blockquote>
+<div>(instance FrameMetric, (4, 2, 0.5)),
+(instance SquareMetric, 0.34),
+…</div></blockquote>
+<p>]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.metric_values">
+<code class="descname">metric_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.metric_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.metric_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of concatenated metric values. Every tuple in the list contains NUM_BATCHES values of one metric.</p>
+<p>e.g.
+[</p>
+<blockquote>
+<div>(3,4,56,6,4,4), # metric index 0
+((3, 1),(4, 2),(56, 22),(6, 2),(4, 3),(4, 2)), # metric index 1
+…</div></blockquote>
+<p>]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.save_in_folder">
+<code class="descname">save_in_folder</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.save_in_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.save_in_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save metrics and losses in the given directory. One loss/metric per file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.IterationLog.stats">
+<code class="descname">stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/log.html#IterationLog.stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.IterationLog.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string with stats.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="batchlog">
+<h2>BatchLog<a class="headerlink" href="#batchlog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="candle.BatchLog">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">BatchLog</code><a class="reference internal" href="../_modules/candle/log.html#BatchLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.BatchLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores loss and metric values for a single batch.</p>
+<p>The indices of the values have to correspond to the the loss/metric in the iteration log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>loss</strong> (<em>list</em>) – List of captured loss values.</li>
+<li><strong>metrics</strong> (<em>list</em>) – List of captured metric values.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="callback.html" class="btn btn-neutral float-right" title="candle.callbacks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="target.html" class="btn btn-neutral" title="candle.Target" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,10 +8,18 @@ class Dispatcher(object):
     """
     The Dispatcher is used to customize the behaviour/handling of the data processing.
 
-    The default dispatcher expects the following behaviour:
-        - The input tensor is available via batch[0]
-        - The target tensor is available via batch[1]
+    The default dispatcher performs the following tasks:
 
+    * In ``prepare_batch`` it create autograd.Variable objects from the batches returned by the dataloader. Furthermore it moves these to the gpu if cuda enabled.
+    * In ``forward`` the input variable is fed into the forward function of the model. The input variable is expected to be retrieved with ``batch[0]``.
+    * In ``compute_losses`` it computes the loss for every target.
+    * In ``compute_metrics`` it computes the result of all the metrics.
+
+    Args:
+        prepare_batch_func (func): The function used to prepare a batch. (If None the do_prepare_batch method is used)
+        forward_func (func): The function used to do a forward pass. (If None the do_forwad method is used)
+        compute_losses_func (func): The function used for computing losses. (If None the do_compute_losses method is used)
+        compute_metrics_func (func): The function used for computing metrics. (If None the do_compute_metrics method is used)
     """
 
     def __init__(self, prepare_batch_func=None, forward_func=None, compute_losses_func=None, compute_metrics_func=None):
@@ -29,8 +37,8 @@ class Dispatcher(object):
             * to move tensors to GPU
 
         Arguments:
-            - batch: The batch as grabbed from the dataloader.
-            - use_cuda: If Variables/Tensors should be moved to GPU
+            batch (list, torch.Tensor, ...): The batch as grabbed from the dataloader.
+            use_cuda (bool): If Variables/Tensors should be moved to GPU
 
         """
         if self.prepare_batch_func is not None:
@@ -43,8 +51,8 @@ class Dispatcher(object):
         Run a forward pass for one batch and return the output.
 
         Arguments:
-            - model: The model from the trainer
-            - batch: The batch processed with the prepare_batch function
+            model (torch.nn.Module): The model from the trainer
+            batch (torch.autograd.Variable): The batch processed with the prepare_batch function
 
         """
         if self.forward_func is not None:
@@ -57,9 +65,9 @@ class Dispatcher(object):
         Compute the losses for the given output and batch data.
 
         Arguments:
-            - targets : List of targets to compute
-            - output : The output returned from the forward function
-            - batch : The batch processed with the prepare_batch function
+            targets (list): List of targets to compute
+            output (torch.autograd.Variable): The output returned from the forward function
+            batch (torch.autograd.Variable): The batch processed with the prepare_batch function
         """
         if self.compute_losses_func is not None:
             return self.compute_losses_func(targets, output, batch)
@@ -71,10 +79,10 @@ class Dispatcher(object):
         Compute the metrics for the given output and batch data.
 
         Arguments:
-            - metrics : List of metrics
-            - output : The output returned from the forward function
-            - batch : The batch processed with the prepare_batch function
-            - model : The pytorch model
+            metrics (list): List of metrics
+            output (torch.Tensor): The output returned from the forward function
+            batch (torch.Tensor): The batch processed with the prepare_batch function
+            model (torch.nn.Module): The pytorch model
         """
 
         if self.compute_metrics_func is not None:

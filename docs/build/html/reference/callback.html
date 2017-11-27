@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.callbacks &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="candle.metrics" href="metric.html"/>
+        <link rel="prev" title="candle.log" href="log.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="trainer.html">candle.Trainer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dispatcher.html">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target.html">candle.Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log.html">candle.log</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>candle.callbacks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/callback.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="candle-callbacks">
+<h1>candle.callbacks<a class="headerlink" href="#candle-callbacks" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="candle.Callback">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">Callback</code><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class that gets informed and can react on given events during the training.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trainer</strong> (<a class="reference internal" href="trainer.html#candle.Trainer" title="candle.Trainer"><em>Trainer</em></a>) – The trainer which is in charge of this callback.</li>
+<li><strong>current_train_log</strong> (<a class="reference internal" href="log.html#candle.TrainingLog" title="candle.TrainingLog"><em>TrainingLog</em></a>) – Holds the latest training-log.</li>
+<li><strong>current_epoch_log</strong> (<a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – Holds the latest epoch-log.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="candle.Callback.after_evaluate">
+<code class="descname">after_evaluate</code><span class="sig-paren">(</span><em>iteration_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.after_evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.after_evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called after an evaluation iteration has finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>iteration_log</strong> (<a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – The log of the finished evaluation.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.after_evaluate_batch">
+<code class="descname">after_evaluate_batch</code><span class="sig-paren">(</span><em>batch_index</em>, <em>batch_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.after_evaluate_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.after_evaluate_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called after the evaluation of a batch has finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_index</strong> (<em>int</em>) – The index of the finished batch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.after_train">
+<code class="descname">after_train</code><span class="sig-paren">(</span><em>training_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.after_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.after_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called after the training is finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>training_log</strong> (<a class="reference internal" href="log.html#candle.TrainingLog" title="candle.TrainingLog"><em>TrainingLog</em></a>) – The training-log of the current training.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.after_train_batch">
+<code class="descname">after_train_batch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>batch_index</em>, <em>batch_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.after_train_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.after_train_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called after the training of a batch has finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – The index of the current epoch.</li>
+<li><strong>batch_index</strong> (<em>int</em>) – The index of the finished batch.</li>
+<li><strong>batch_log</strong> (<a class="reference internal" href="log.html#candle.BatchLog" title="candle.BatchLog"><em>BatchLog</em></a>) – The log of the finished batch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.after_train_epoch">
+<code class="descname">after_train_epoch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>epoch_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.after_train_epoch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.after_train_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called after the training of an epoch has finished.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – The index of the new epoch.</li>
+<li><strong>epoch_log</strong> (<a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – The log of the new epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.before_evaluate">
+<code class="descname">before_evaluate</code><span class="sig-paren">(</span><em>iteration_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.before_evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.before_evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called before an evaluation iteration starts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>iteration_log</strong> (<a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – The log of the new evaluation.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.before_evaluate_batch">
+<code class="descname">before_evaluate_batch</code><span class="sig-paren">(</span><em>batch_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.before_evaluate_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.before_evaluate_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called before the evaluation of a new batch starts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_index</strong> (<em>int</em>) – The index of the new batch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.before_train">
+<code class="descname">before_train</code><span class="sig-paren">(</span><em>training_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.before_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.before_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called before the training starts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>training_log</strong> (<a class="reference internal" href="log.html#candle.TrainingLog" title="candle.TrainingLog"><em>TrainingLog</em></a>) – The training-log of the current training.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.before_train_batch">
+<code class="descname">before_train_batch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>batch_index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.before_train_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.before_train_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called before the training of a new batch is started.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – The index of the current epoch.</li>
+<li><strong>batch_index</strong> (<em>int</em>) – The index of the new batch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Callback.before_train_epoch">
+<code class="descname">before_train_epoch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>epoch_log</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/callbacks/base.html#Callback.before_train_epoch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Callback.before_train_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets called before the training of a new epoch is started.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – The index of the new epoch.</li>
+<li><strong>epoch_log</strong> (<a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog"><em>IterationLog</em></a>) – The log of the new epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metric.html" class="btn btn-neutral float-right" title="candle.metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="log.html" class="btn btn-neutral" title="candle.log" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

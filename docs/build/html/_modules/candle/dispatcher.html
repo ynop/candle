@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.dispatcher &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/trainer.html">candle.Trainer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/dispatcher.html">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/target.html">candle.Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/log.html">candle.log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/callback.html">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>candle.dispatcher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for candle.dispatcher</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="k">import</span> <span class="n">autograd</span>
+
+
+<div class="viewcode-block" id="Dispatcher"><a class="viewcode-back" href="../../reference/dispatcher.html#candle.Dispatcher">[docs]</a><span class="k">class</span> <span class="nc">Dispatcher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Dispatcher is used to customize the behaviour/handling of the data processing.</span>
+
+<span class="sd">    The default dispatcher performs the following tasks:</span>
+
+<span class="sd">    * In ``prepare_batch`` it create autograd.Variable objects from the batches returned by the dataloader. Furthermore it moves these to the gpu if cuda enabled.</span>
+<span class="sd">    * In ``forward`` the input variable is fed into the forward function of the model. The input variable is expected to be retrieved with ``batch[0]``.</span>
+<span class="sd">    * In ``compute_losses`` it computes the loss for every target.</span>
+<span class="sd">    * In ``compute_metrics`` it computes the result of all the metrics.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prepare_batch_func (func): The function used to prepare a batch. (If None the do_prepare_batch method is used)</span>
+<span class="sd">        forward_func (func): The function used to do a forward pass. (If None the do_forwad method is used)</span>
+<span class="sd">        compute_losses_func (func): The function used for computing losses. (If None the do_compute_losses method is used)</span>
+<span class="sd">        compute_metrics_func (func): The function used for computing metrics. (If None the do_compute_metrics method is used)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prepare_batch_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compute_losses_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compute_metrics_func</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prepare_batch_func</span> <span class="o">=</span> <span class="n">prepare_batch_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_func</span> <span class="o">=</span> <span class="n">forward_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_losses_func</span> <span class="o">=</span> <span class="n">compute_losses_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span> <span class="o">=</span> <span class="n">compute_metrics_func</span>
+
+<div class="viewcode-block" id="Dispatcher.prepare_batch"><a class="viewcode-back" href="../../reference/dispatcher.html#candle.Dispatcher.prepare_batch">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The prepare batch function is called when a batch is grabbed from the dataloader before its passed to the forward function.</span>
+
+<span class="sd">        It can/should be used:</span>
+<span class="sd">            * to wrap tensors in Variables</span>
+<span class="sd">            * to move tensors to GPU</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            batch (list, torch.Tensor, ...): The batch as grabbed from the dataloader.</span>
+<span class="sd">            use_cuda (bool): If Variables/Tensors should be moved to GPU</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_batch_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_batch_func</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_prepare_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.forward"><a class="viewcode-back" href="../../reference/dispatcher.html#candle.Dispatcher.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run a forward pass for one batch and return the output.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            model (torch.nn.Module): The model from the trainer</span>
+<span class="sd">            batch (torch.autograd.Variable): The batch processed with the prepare_batch function</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_func</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.compute_losses"><a class="viewcode-back" href="../../reference/dispatcher.html#candle.Dispatcher.compute_losses">[docs]</a>    <span class="k">def</span> <span class="nf">compute_losses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the losses for the given output and batch data.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            targets (list): List of targets to compute</span>
+<span class="sd">            output (torch.autograd.Variable): The output returned from the forward function</span>
+<span class="sd">            batch (torch.autograd.Variable): The batch processed with the prepare_batch function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_losses_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_losses_func</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_compute_losses</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dispatcher.compute_metrics"><a class="viewcode-back" href="../../reference/dispatcher.html#candle.Dispatcher.compute_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">compute_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the metrics for the given output and batch data.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            metrics (list): List of metrics</span>
+<span class="sd">            output (torch.Tensor): The output returned from the forward function</span>
+<span class="sd">            batch (torch.Tensor): The batch processed with the prepare_batch function</span>
+<span class="sd">            model (torch.nn.Module): The pytorch model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_metrics_func</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_compute_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">do_prepare_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">batch</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Sequence</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">do_prepare_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">autograd</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">do_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">do_compute_losses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">output_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">output_data</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">output_index</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_data</span> <span class="o">=</span> <span class="n">output</span>
+
+            <span class="n">target_data</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="n">target</span><span class="o">.</span><span class="n">target_index</span><span class="p">]</span>
+
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">target_data</span><span class="p">)</span> <span class="o">*</span> <span class="n">target</span><span class="o">.</span><span class="n">weight</span>
+            <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">losses</span>
+
+    <span class="k">def</span> <span class="nf">do_compute_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">metric_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">output_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">output_data</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">metric</span><span class="o">.</span><span class="n">output_index</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_data</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">data</span>
+
+            <span class="n">target_data</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="n">metric</span><span class="o">.</span><span class="n">target_index</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">target_data</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">metric_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">metric_results</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

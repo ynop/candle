@@ -1,28 +1,56 @@
 from torch import autograd
 
-from . import callback
 from . import log
 from . import dispatcher
-from . import callbacks
+from . import callbacks as cb
 
 
 class Trainer(object):
     """
-    Handles the training/evaluation of a given model.
+    The trainer is the main class to train / evaluate models.
 
     Arguments:
-        - model : The pytorch model to be trained or evaluated.
-        - optimizer : The optimizer to be used for training.
-        - loss_funcs : The loss functions to be applied (name/loss_func).
-        - num_epochs : Number of epochs to train.
-        - use_cuda : Whether to use CUDA for computation.
-        - callbacks : Callbacks that should be informed about given events.
-        - metrics : Metrics which should be evaluated (name/metric)
+        model (torch.nn.Module) : The pytorch model to be trained or evaluated.
+        optimizer (torch.optim.Optimizer): The optimizer to be used for training.
+        targets (list) : List of targets (:py:class:`candle.Target`) to use for training/evaluation.
+        num_epochs (int): Number of epochs to train.
+        use_cuda (bool): Whether to use CUDA for computation.
+        callbacks (list): Callbacks that should be informed about given events.
+        metrics (list): Metrics which should be evaluated (name/metric)
+        dispatcher (Dispatcher): The dispatcher to use (By default the :py:class:`candle.Dispatcher` is used).
 
+    Example:
+        >>> import torch
+        >>> from torch.utils import data
+        >>> from torch import optim
+        >>>
+        >>> # Create data loaders
+        >>> train_loader = data.DataLoader(train_ds, batch_size=10, shuffle=True)
+        >>> dev_loader = data.DataLoader(dev_ds, batch_size=10, shuffle=False)
+        >>> test_loader = data.DataLoader(test_ds, batch_size=10, shuffle=False)
+        >>>
+        >>> # Create the model
+        >>> model = torch.nn.Linear(10, 2)
+        >>>
+        >>> # Optimizer and loss
+        >>> optimizer = optim.Adam(model.parameters(), lr=1e-3)
+        >>> mse = torch.nn.MSELoss()
+        >>>
+        >>> # Create the trainer
+        >>> trainer = Trainer(model, optimizer,
+        >>>                          targets=[candle.Target('MSE', mse)],
+        >>>                          num_epochs=3,
+        >>>                          use_cuda=False)
+        >>>
+        >>> # TRAIN
+        >>> train_log = trainer.train(train_loader, dev_loader)
+        >>>
+        >>> # EVALUATE
+        >>> eval_log = trainer.evaluate(test_loader)
     """
 
     default_callbacks = [
-        callbacks.LoggerCallback
+        cb.LoggerCallback
     ]
 
     def __init__(self, model, optimizer, targets=[], num_epochs=10, use_cuda=True, callbacks=[], metrics=[], dispatcher=dispatcher.Dispatcher()):
@@ -35,7 +63,7 @@ class Trainer(object):
         self._num_epochs = num_epochs
         self._use_cuda = use_cuda
 
-        self._callback_handler = callback.CallbackHandler()
+        self._callback_handler = cb.CallbackHandler()
         self._callback_handler.callbacks.extend(callbacks)
         self._callback_handler.callbacks.extend(Trainer.instantiate_default_callbacks())
         self._callback_handler.set_trainer(self)
@@ -44,12 +72,14 @@ class Trainer(object):
 
     def train(self, train_loader, dev_loader=None):
         """
-        Run the training. Returns a training log.
+        Run the training.
 
-        - Arguments:
-            - train_loader : PyTorch loader that provides training data.
-            - dev_loader : PyTorch loader that provides validation data.
+        Arguments:
+            train_loader (torch.utils.data.DataLoader): PyTorch loader that provides training data.
+            dev_loader (torch.utils.data.DataLoader): PyTorch loader that provides validation data.
 
+        Returns:
+            TrainingLog: The training log.
         """
         train_log = log.TrainingLog(targets=self._targets, metrics=self._metrics)
 
@@ -70,7 +100,10 @@ class Trainer(object):
         Run evaluation. Returns a iteration log.
 
         Arguments:
-            - test_loader : PyTorch loader that provides evaluation data.
+            test_loader (torch.utils.data.DataLoader): PyTorch loader that provides evaluation data.
+
+        Returns:
+            IterationLog: The iteration log.
         """
         iteration_log = log.IterationLog(targets=self._targets, metrics=self._metrics)
 
@@ -93,9 +126,12 @@ class Trainer(object):
         Run one epoch of training. Returns a iteration log.
 
         Arguments:
-            - epoch_index : An index that identifies the epoch.
-            - train_loader : PyTorch loader that provides training data.
-            - dev_loader : PyTorch loader that provides validation data.
+            epoch_index (int): An index that identifies the epoch.
+            train_loader (torch.utils.data.DataLoader): PyTorch loader that provides training data.
+            dev_loader (torch.utils.data.DataLoader): PyTorch loader that provides validation data.
+
+        Returns:
+            IterationLog: The iteration log.
         """
         iteration_log = log.IterationLog(targets=self._targets, metrics=self._metrics)
 
@@ -118,9 +154,12 @@ class Trainer(object):
         Run training of one batch. Returns a batch log.
 
         Arguments:
-            - epoch_index : An index that identifies the epoch.
-            - batch_index : An index that identifies the batch.
-            - batch : The data of the batch.
+            epoch_index (int): An index that identifies the epoch.
+            batch_index (int): An index that identifies the batch.
+            batch (list, torch.Tensor, ...): The data of the batch.
+
+        Returns:
+            BatchLog: The batch log.
         """
         self._callback_handler.notify_before_train_batch(epoch_index, batch_index)
 
@@ -150,8 +189,11 @@ class Trainer(object):
         Run evaluation of one batch. Returns a batch log.
 
         Arguments:
-            - batch_index : An index that identifies the batch.
-            - batch : The data of the batch.
+            batch_index (int): An index that identifies the batch.
+            batch (list, torch.Tensor, ...): The data of the batch.
+
+        Returns:
+            BatchLog: The batch log.
         """
         self._callback_handler.notify_before_evaluate_batch(batch_index)
 
@@ -169,17 +211,6 @@ class Trainer(object):
 
         return batch_log
 
-    def cumulate_losses(self, losses):
-        """
-        Sum up all losses, so one loss is given for backprop.
-        """
-        loss = losses[0]
-
-        for i in range(1, len(losses)):
-            loss += losses[i]
-
-        return loss
-
     def prepare_model(self):
         """
         Prepares the model for training/evaluation.
@@ -189,6 +220,12 @@ class Trainer(object):
 
     @classmethod
     def instantiate_default_callbacks(cls):
+        """
+        Create an instance of the all the default callbacks.
+
+        Returns:
+            list: List of callback instances.
+        """
         def_callbacks = []
 
         for callback_class in cls.default_callbacks:

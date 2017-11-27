@@ -14,12 +14,12 @@ class TrainingLog(object):
     """
     Stores log data for a training run.
 
-    Variables:
-        - epochs : list of iteration logs for every epoch
-
     Arguments:
-        - targets : list of targets that are going to be logged (index will be used for mapping).
-        - metrics : list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
+        targets (list): list of targets that are going to be logged (index will be used for mapping).
+        metrics (list): list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
+
+    Attributes:
+        epochs (list): list of iteration logs for every epoch
     """
 
     def __init__(self, targets=[], metrics=[]):
@@ -126,13 +126,13 @@ class IterationLog(object):
     """
     Stores log data for one training or evaluation iteration.
 
-    Variables:
-        - batches : list of batch logs
-        - dev_log : Holds the evaluation log (for training iterations only)
-
     Arguments:
-        - targets : list of targets that are going to be logged (index will be used for mapping).
-        - metrics : list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
+        targets (list): list of targets that are going to be logged (index will be used for mapping).
+        metrics (list): list of (metric, metric-name) tuples that are going to be logged (index will be used for mapping).
+
+    Attributes:
+        batches (list): list of batch logs
+        dev_log (IterationLog): Holds the evaluation log (for training iterations only)
     """
 
     __slots__ = ['dev_log', 'batches', '_targets', '_metrics']
@@ -307,6 +307,10 @@ class BatchLog(object):
     Stores loss and metric values for a single batch.
 
     The indices of the values have to correspond to the the loss/metric in the iteration log.
+
+    Attributes:
+        loss (list): List of captured loss values.
+        metrics (list): List of captured metric values.
     """
 
     __slots__ = ['loss', 'metrics']

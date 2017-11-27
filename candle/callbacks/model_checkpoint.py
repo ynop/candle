@@ -2,19 +2,18 @@ import os
 
 import torch
 
-from .. import callback
+from . import base
 
 
-class ModelCheckpointCallback(callback.Callback):
+class ModelCheckpointCallback(base.Callback):
     """
     Stores the model on the filesystem at given points.
 
     Arguments:
-        - path : Base path to store the model checkpoints.
-        - after_num_epochs : Store the model after every [after_num_epochs] epochs.
-        - after_num_batches : Store the model after every [after_num_batches] batches.
-        - model_extraction_fn : If only part of the model should be stored. This function takes the full model as parameter and returns the part of the model that should be stored.
-
+        path (str): Base path to store the model checkpoints.
+        after_num_epochs (int): Store the model after every [after_num_epochs] epochs.
+        after_num_batches (int): Store the model after every [after_num_batches] batches.
+        model_extraction_fn (func): If only part of the model should be stored. This function takes the full model as parameter and returns the part of the model that should be stored.
     """
 
     def __init__(self, path, after_num_epochs=1, after_num_batches=0, model_extraction_fn=None):
@@ -34,7 +33,7 @@ class ModelCheckpointCallback(callback.Callback):
             self._store_model(epoch_index=epoch_index, batch_index=batch_index)
 
     def _store_model(self, epoch_index, batch_index=-1):
-        model = self._trainer._model
+        model = self.trainer._model
 
         if self.model_extraction_fn is not None:
             model = self.model_extraction_fn(model)

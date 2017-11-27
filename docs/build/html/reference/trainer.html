@@ -1,0 +1,436 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.Trainer &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="candle.Dispatcher" href="dispatcher.html"/>
+        <link rel="prev" title="Installation" href="../notes/install.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">candle.Trainer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dispatcher.html">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target.html">candle.Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log.html">candle.log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="callback.html">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>candle.Trainer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/trainer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="candle-trainer">
+<h1>candle.Trainer<a class="headerlink" href="#candle-trainer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="candle.Trainer">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">Trainer</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>targets=[]</em>, <em>num_epochs=10</em>, <em>use_cuda=True</em>, <em>callbacks=[]</em>, <em>metrics=[]</em>, <em>dispatcher=&lt;candle.dispatcher.Dispatcher object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trainer is the main class to train / evaluate models.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<em>torch.nn.Module</em>) – The pytorch model to be trained or evaluated.</li>
+<li><strong>optimizer</strong> (<em>torch.optim.Optimizer</em>) – The optimizer to be used for training.</li>
+<li><strong>targets</strong> (<em>list</em>) – List of targets (<a class="reference internal" href="target.html#candle.Target" title="candle.Target"><code class="xref py py-class docutils literal"><span class="pre">candle.Target</span></code></a>) to use for training/evaluation.</li>
+<li><strong>num_epochs</strong> (<em>int</em>) – Number of epochs to train.</li>
+<li><strong>use_cuda</strong> (<em>bool</em>) – Whether to use CUDA for computation.</li>
+<li><strong>callbacks</strong> (<em>list</em>) – Callbacks that should be informed about given events.</li>
+<li><strong>metrics</strong> (<em>list</em>) – Metrics which should be evaluated (name/metric)</li>
+<li><strong>dispatcher</strong> (<a class="reference internal" href="dispatcher.html#candle.Dispatcher" title="candle.Dispatcher"><em>Dispatcher</em></a>) – The dispatcher to use (By default the <a class="reference internal" href="dispatcher.html#candle.Dispatcher" title="candle.Dispatcher"><code class="xref py py-class docutils literal"><span class="pre">candle.Dispatcher</span></code></a> is used).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.utils</span> <span class="k">import</span> <span class="n">data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch</span> <span class="k">import</span> <span class="n">optim</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create data loaders</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_loader</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">train_ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dev_loader</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dev_ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_loader</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">test_ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create the model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Optimizer and loss</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mse</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create the trainer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                         <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">candle</span><span class="o">.</span><span class="n">Target</span><span class="p">(</span><span class="s1">&#39;MSE&#39;</span><span class="p">,</span> <span class="n">mse</span><span class="p">)],</span>
+<span class="gp">&gt;&gt;&gt; </span>                         <span class="n">num_epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                         <span class="n">use_cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># TRAIN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_log</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">dev_loader</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># EVALUATE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eval_log</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">test_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="candle.Trainer.evaluate">
+<code class="descname">evaluate</code><span class="sig-paren">(</span><em>test_loader</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run evaluation. Returns a iteration log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test_loader</strong> (<em>torch.utils.data.DataLoader</em>) – PyTorch loader that provides evaluation data.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The iteration log.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog">IterationLog</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Trainer.evaluate_batch">
+<code class="descname">evaluate_batch</code><span class="sig-paren">(</span><em>batch_index</em>, <em>batch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.evaluate_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.evaluate_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run evaluation of one batch. Returns a batch log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>batch_index</strong> (<em>int</em>) – An index that identifies the batch.</li>
+<li><strong>batch</strong> (<em>list</em><em>, </em><em>torch.Tensor</em><em>, </em><em>..</em>) – The data of the batch.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The batch log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="log.html#candle.BatchLog" title="candle.BatchLog">BatchLog</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="candle.Trainer.instantiate_default_callbacks">
+<em class="property">classmethod </em><code class="descname">instantiate_default_callbacks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.instantiate_default_callbacks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.instantiate_default_callbacks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the all the default callbacks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of callback instances.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Trainer.prepare_model">
+<code class="descname">prepare_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.prepare_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.prepare_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the model for training/evaluation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Trainer.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>train_loader</em>, <em>dev_loader=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the training.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – PyTorch loader that provides training data.</li>
+<li><strong>dev_loader</strong> (<em>torch.utils.data.DataLoader</em>) – PyTorch loader that provides validation data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The training log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="log.html#candle.TrainingLog" title="candle.TrainingLog">TrainingLog</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Trainer.train_batch">
+<code class="descname">train_batch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>batch_index</em>, <em>batch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.train_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.train_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run training of one batch. Returns a batch log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – An index that identifies the epoch.</li>
+<li><strong>batch_index</strong> (<em>int</em>) – An index that identifies the batch.</li>
+<li><strong>batch</strong> (<em>list</em><em>, </em><em>torch.Tensor</em><em>, </em><em>..</em>) – The data of the batch.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The batch log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="log.html#candle.BatchLog" title="candle.BatchLog">BatchLog</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Trainer.train_epoch">
+<code class="descname">train_epoch</code><span class="sig-paren">(</span><em>epoch_index</em>, <em>train_loader</em>, <em>dev_loader=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/trainer.html#Trainer.train_epoch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Trainer.train_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one epoch of training. Returns a iteration log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>epoch_index</strong> (<em>int</em>) – An index that identifies the epoch.</li>
+<li><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – PyTorch loader that provides training data.</li>
+<li><strong>dev_loader</strong> (<em>torch.utils.data.DataLoader</em>) – PyTorch loader that provides validation data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The iteration log.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="log.html#candle.IterationLog" title="candle.IterationLog">IterationLog</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dispatcher.html" class="btn btn-neutral float-right" title="candle.Dispatcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../notes/install.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

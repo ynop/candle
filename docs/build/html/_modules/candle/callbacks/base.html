@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.callbacks.base &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/trainer.html">candle.Trainer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/dispatcher.html">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/target.html">candle.Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/log.html">candle.log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/callback.html">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference/metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>candle.callbacks.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for candle.callbacks.base</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Callback"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback">[docs]</a><span></span><span class="k">class</span> <span class="nc">Callback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that gets informed and can react on given events during the training.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        trainer (Trainer): The trainer which is in charge of this callback.</span>
+<span class="sd">        current_train_log (TrainingLog): Holds the latest training-log.</span>
+<span class="sd">        current_epoch_log (IterationLog): Holds the latest epoch-log.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainer</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_train_log</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch_log</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Callback.before_train"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.before_train">[docs]</a>    <span class="k">def</span> <span class="nf">before_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called before the training starts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            training_log (TrainingLog): The training-log of the current training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_train_log</span> <span class="o">=</span> <span class="n">training_log</span></div>
+
+<div class="viewcode-block" id="Callback.after_train"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.after_train">[docs]</a>    <span class="k">def</span> <span class="nf">after_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called after the training is finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            training_log (TrainingLog): The training-log of the current training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_train_log</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Callback.before_train_epoch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.before_train_epoch">[docs]</a>    <span class="k">def</span> <span class="nf">before_train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called before the training of a new epoch is started.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epoch_index (int): The index of the new epoch.</span>
+<span class="sd">            epoch_log (IterationLog): The log of the new epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch_log</span> <span class="o">=</span> <span class="n">epoch_log</span></div>
+
+<div class="viewcode-block" id="Callback.after_train_epoch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.after_train_epoch">[docs]</a>    <span class="k">def</span> <span class="nf">after_train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called after the training of an epoch has finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epoch_index (int): The index of the new epoch.</span>
+<span class="sd">            epoch_log (IterationLog): The log of the new epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch_log</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Callback.before_train_batch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.before_train_batch">[docs]</a>    <span class="k">def</span> <span class="nf">before_train_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called before the training of a new batch is started.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epoch_index (int): The index of the current epoch.</span>
+<span class="sd">            batch_index (int): The index of the new batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Callback.after_train_batch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.after_train_batch">[docs]</a>    <span class="k">def</span> <span class="nf">after_train_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called after the training of a batch has finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epoch_index (int): The index of the current epoch.</span>
+<span class="sd">            batch_index (int): The index of the finished batch.</span>
+<span class="sd">            batch_log (BatchLog): The log of the finished batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Callback.before_evaluate"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.before_evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">before_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called before an evaluation iteration starts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            iteration_log (IterationLog): The log of the new evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Callback.after_evaluate"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.after_evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">after_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called after an evaluation iteration has finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            iteration_log (IterationLog): The log of the finished evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Callback.before_evaluate_batch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.before_evaluate_batch">[docs]</a>    <span class="k">def</span> <span class="nf">before_evaluate_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called before the evaluation of a new batch starts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_index (int): The index of the new batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Callback.after_evaluate_batch"><a class="viewcode-back" href="../../../reference/callback.html#candle.Callback.after_evaluate_batch">[docs]</a>    <span class="k">def</span> <span class="nf">after_evaluate_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets called after the evaluation of a batch has finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch_index (int): The index of the finished batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">CallbackHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that stores a list of callbacks and handles notification distribution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">set_trainer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">trainer</span> <span class="o">=</span> <span class="n">trainer</span>
+
+    <span class="k">def</span> <span class="nf">notify_before_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">before_train</span><span class="p">(</span><span class="n">training_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_after_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">after_train</span><span class="p">(</span><span class="n">training_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_before_train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">before_train_epoch</span><span class="p">(</span><span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_after_train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">after_train_epoch</span><span class="p">(</span><span class="n">epoch_index</span><span class="p">,</span> <span class="n">epoch_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_before_train_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">before_train_batch</span><span class="p">(</span><span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_after_train_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">after_train_batch</span><span class="p">(</span><span class="n">epoch_index</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_before_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">before_evaluate</span><span class="p">(</span><span class="n">iteration_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_after_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">after_evaluate</span><span class="p">(</span><span class="n">iteration_log</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_before_evaluate_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">before_evaluate_batch</span><span class="p">(</span><span class="n">batch_index</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">notify_after_evaluate_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">callback</span><span class="o">.</span><span class="n">after_evaluate_batch</span><span class="p">(</span><span class="n">batch_index</span><span class="p">,</span> <span class="n">batch_log</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>candle.Dispatcher &mdash; candle 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="candle 0.1 documentation" href="../index.html"/>
+        <link rel="next" title="candle.Target" href="target.html"/>
+        <link rel="prev" title="candle.Trainer" href="trainer.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> candle
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/install.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="trainer.html">candle.Trainer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">candle.Dispatcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="target.html">candle.Target</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log.html">candle.log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="callback.html">candle.callbacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metric.html">candle.metrics</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">candle</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>candle.Dispatcher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/dispatcher.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="candle-dispatcher">
+<h1>candle.Dispatcher<a class="headerlink" href="#candle-dispatcher" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="candle.Dispatcher">
+<em class="property">class </em><code class="descclassname">candle.</code><code class="descname">Dispatcher</code><span class="sig-paren">(</span><em>prepare_batch_func=None</em>, <em>forward_func=None</em>, <em>compute_losses_func=None</em>, <em>compute_metrics_func=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/dispatcher.html#Dispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Dispatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Dispatcher is used to customize the behaviour/handling of the data processing.</p>
+<p>The default dispatcher performs the following tasks:</p>
+<ul class="simple">
+<li>In <code class="docutils literal"><span class="pre">prepare_batch</span></code> it create autograd.Variable objects from the batches returned by the dataloader. Furthermore it moves these to the gpu if cuda enabled.</li>
+<li>In <code class="docutils literal"><span class="pre">forward</span></code> the input variable is fed into the forward function of the model. The input variable is expected to be retrieved with <code class="docutils literal"><span class="pre">batch[0]</span></code>.</li>
+<li>In <code class="docutils literal"><span class="pre">compute_losses</span></code> it computes the loss for every target.</li>
+<li>In <code class="docutils literal"><span class="pre">compute_metrics</span></code> it computes the result of all the metrics.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prepare_batch_func</strong> (<em>func</em>) – The function used to prepare a batch. (If None the do_prepare_batch method is used)</li>
+<li><strong>forward_func</strong> (<em>func</em>) – The function used to do a forward pass. (If None the do_forwad method is used)</li>
+<li><strong>compute_losses_func</strong> (<em>func</em>) – The function used for computing losses. (If None the do_compute_losses method is used)</li>
+<li><strong>compute_metrics_func</strong> (<em>func</em>) – The function used for computing metrics. (If None the do_compute_metrics method is used)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="candle.Dispatcher.compute_losses">
+<code class="descname">compute_losses</code><span class="sig-paren">(</span><em>targets</em>, <em>output</em>, <em>batch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/dispatcher.html#Dispatcher.compute_losses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Dispatcher.compute_losses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the losses for the given output and batch data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>targets</strong> (<em>list</em>) – List of targets to compute</li>
+<li><strong>output</strong> (<em>torch.autograd.Variable</em>) – The output returned from the forward function</li>
+<li><strong>batch</strong> (<em>torch.autograd.Variable</em>) – The batch processed with the prepare_batch function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Dispatcher.compute_metrics">
+<code class="descname">compute_metrics</code><span class="sig-paren">(</span><em>metrics</em>, <em>output</em>, <em>batch</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/dispatcher.html#Dispatcher.compute_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Dispatcher.compute_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the metrics for the given output and batch data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>metrics</strong> (<em>list</em>) – List of metrics</li>
+<li><strong>output</strong> (<em>torch.Tensor</em>) – The output returned from the forward function</li>
+<li><strong>batch</strong> (<em>torch.Tensor</em>) – The batch processed with the prepare_batch function</li>
+<li><strong>model</strong> (<em>torch.nn.Module</em>) – The pytorch model</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Dispatcher.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>model</em>, <em>batch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/dispatcher.html#Dispatcher.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Dispatcher.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a forward pass for one batch and return the output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<em>torch.nn.Module</em>) – The model from the trainer</li>
+<li><strong>batch</strong> (<em>torch.autograd.Variable</em>) – The batch processed with the prepare_batch function</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="candle.Dispatcher.prepare_batch">
+<code class="descname">prepare_batch</code><span class="sig-paren">(</span><em>batch</em>, <em>use_cuda=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/candle/dispatcher.html#Dispatcher.prepare_batch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#candle.Dispatcher.prepare_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>The prepare batch function is called when a batch is grabbed from the dataloader before its passed to the forward function.</p>
+<dl class="docutils">
+<dt>It can/should be used:</dt>
+<dd><ul class="first last simple">
+<li>to wrap tensors in Variables</li>
+<li>to move tensors to GPU</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batch</strong> (<em>list</em><em>, </em><em>torch.Tensor</em><em>, </em><em>..</em>) – The batch as grabbed from the dataloader.</li>
+<li><strong>use_cuda</strong> (<em>bool</em>) – If Variables/Tensors should be moved to GPU</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="target.html" class="btn btn-neutral float-right" title="candle.Target" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="trainer.html" class="btn btn-neutral" title="candle.Trainer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Matthias Büchi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
