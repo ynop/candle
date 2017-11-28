@@ -47,7 +47,15 @@ class TrainingLog(object):
             return
 
         dev_loss_x = np.arange(1, len(self.epochs) + 1)
-        dev_losses_y = np.stack([np.array(epoch.dev_log.mean_loss()) for epoch in self.epochs], 1)
+        dev_losses_y = []
+
+        for epoch in self.epochs:
+            if epoch.dev_log is not None:
+                dev_losses_y.append(np.array(epoch.dev_log.mean_loss()))
+            else:
+                dev_losses_y.append(np.array([0.0]))
+
+        dev_losses_y = np.stack(dev_losses_y, 1)
 
         train_loss_x_per_epoch = []
         train_losses_y_per_epoch = []
@@ -79,7 +87,21 @@ class TrainingLog(object):
         if len(self._metrics) <= 0 or len(self.epochs) <= 0:
             return
 
-        dev = list(zip(*[epoch.dev_log.mean_metrics() for epoch in self.epochs]))
+        dev = []
+
+        [epoch.dev_log.mean_metrics() for epoch in self.epochs]
+
+        for epoch in self.epochs:
+            if epoch.dev_log is not None:
+                dev.append(epoch.dev_log.mean_metrics())
+            else:
+                mock = []
+
+                for metric in self._metrics:
+                    mock.append([0] * len(metric.columns()))
+                dev.append(mock)
+
+        dev = list(zip(*dev))
         train = list(zip(*[epoch.metric_values() for epoch in self.epochs]))
         train = [list(np.concatenate(x)) for x in train]
 

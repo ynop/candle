@@ -142,8 +142,9 @@ class Trainer(object):
             batch_log = self.train_batch(epoch_index, batch_index, batch)
             iteration_log.append_batch_log(batch_log)
 
-        dev_log = self.evaluate(dev_loader)
-        iteration_log.dev_log = dev_log
+        if dev_loader is not None:
+            dev_log = self.evaluate(dev_loader)
+            iteration_log.dev_log = dev_log
 
         self._callback_handler.notify_after_train_epoch(epoch_index, iteration_log)
 
