@@ -12,3 +12,14 @@ Simple alternative to https://github.com/ncullen93/torchsample, but less functio
 * Log (automatic store of loss, metrics)
 * Produce charts of losses and metrics
 * Save results in files
+
+
+## Installation
+
+**Install PyTorch**  
+See http://pytorch.org/
+
+**Install candle**
+```sh
+pip install -e .
+```

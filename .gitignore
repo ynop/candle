@@ -2,3 +2,5 @@
 .smt
 
 *.pyc
+
+docs_source/build
