@@ -1,3 +1,4 @@
+from setuptools import find_packages
 from setuptools import setup
 
 setup(name='candle',
@@ -13,6 +14,7 @@ setup(name='candle',
       ],
       keywords='',
       license='MIT',
+      packages=find_packages(),
       install_requires=[
           'numpy==1.14.0',
           'matplotlib==2.1.1'
