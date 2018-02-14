@@ -95,7 +95,10 @@ class Dispatcher(object):
 
         if isinstance(data, collections.Sequence):
             data = [self.do_prepare_batch(x, use_cuda=use_cuda) for x in data]
-        elif torch.is_tensor(data):
+        elif type(data).__name__ == 'ndarray':
+            data = torch.from_numpy(data)
+
+        if torch.is_tensor(data):
             if use_cuda:
                 data = data.cuda()
 
