@@ -1,5 +1,7 @@
 import os
+import collections
 
+import pandas as pd
 import numpy as np
 import matplotlib
 
@@ -142,6 +144,73 @@ class TrainingLog(object):
                 ]))
                 f.write(epoch.stats())
                 f.write("\n")
+
+    def save_panda_dataframe(self, train_his_path, dev_his_path):
+        columns = collections.defaultdict(list)
+
+        epoch_ids = []
+        batch_ids = []
+
+        for epoch_idx, epoch in enumerate(self.epochs):
+            for idx, values in enumerate(epoch.loss_values()):
+                name = self._targets[idx].name
+                columns[name].append(np.array(values))
+
+            for idx, values in enumerate(epoch.metric_values()):
+                name = self._metrics[idx].name
+                metric_columns = self._metrics[idx].columns()
+
+                if len(metric_columns) > 1:
+                    components = np.array(values).T
+                else:
+                    components = np.array([values])
+
+                for c_idx, column in enumerate(metric_columns):
+                    columns['{} {}'.format(name, column)].append(components[c_idx])
+
+            epoch_ids.extend([epoch_idx] * len(epoch.batches))
+            batch_ids.extend(list(range(len(epoch.batches))))
+
+        columns = {k: np.concatenate(v) for k, v in columns.items()}
+        columns['epoch'] = np.array(epoch_ids)
+        columns['batch'] = np.array(batch_ids)
+
+        df = pd.DataFrame(columns)
+        df.to_csv(train_his_path)
+
+        columns = collections.defaultdict(list)
+        epoch_ids = []
+
+        for epoch_idx, epoch in enumerate(self.epochs):
+            losses = epoch.dev_log.mean_loss()
+
+            for idx, value in enumerate(losses):
+                name = self._targets[idx].name
+                columns[name].append(value)
+
+            metrics = epoch.dev_log.mean_metrics()
+
+            for idx, values in enumerate(metrics):
+                name = self._metrics[idx].name
+                metric_columns = self._metrics[idx].columns()
+
+                print(name)
+                print(metric_columns)
+                print(values)
+
+                if len(metric_columns) > 1:
+                    for c_idx, column in enumerate(metric_columns):
+                        columns['{} {}'.format(name, column)].append(values[c_idx])
+                else:
+                    columns['{} {}'.format(name, metric_columns[0])].append(values)
+
+            epoch_ids.append(epoch_idx)
+
+        columns = {k: np.array(v) for k, v in columns.items()}
+        columns['epoch'] = np.array(epoch_ids)
+
+        df = pd.DataFrame(columns)
+        df.to_csv(dev_his_path)
 
 
 class IterationLog(object):

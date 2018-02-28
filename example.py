@@ -130,6 +130,7 @@ os.makedirs('train_loss', exist_ok=True)
 os.makedirs('train_metrics', exist_ok=True)
 train_log.save_loss_plots_at('train_loss')
 train_log.save_metric_plots_at('train_metrics')
+train_log.save_panda_dataframe('train_history.csv', 'dev_history.csv')
 
 train_log.write_stats_to('training_result.txt')
 eval_log.write_stats_to('evaluation_result.txt')

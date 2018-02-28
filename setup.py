@@ -16,6 +16,7 @@ setup(name='candle',
       license='MIT',
       packages=find_packages(),
       install_requires=[
+          'pandas',
           'numpy==1.14.0',
           'matplotlib==2.1.1'
       ],
