@@ -3,13 +3,6 @@ import collections
 
 import pandas as pd
 import numpy as np
-import matplotlib
-
-matplotlib.use('Agg')
-
-import matplotlib.pyplot as plt
-
-plt.style.use('ggplot')
 
 
 class TrainingLog(object):
@@ -45,6 +38,15 @@ class TrainingLog(object):
         """
         Save a plot as png for every loss function.
         """
+
+        import matplotlib
+
+        matplotlib.use('Agg')
+
+        import matplotlib.pyplot as plt
+
+        plt.style.use('ggplot')
+
         if len(self.epochs) <= 0:
             return
 
@@ -86,6 +88,14 @@ class TrainingLog(object):
         Save a plot as png for every metric.
         """
 
+        import matplotlib
+
+        matplotlib.use('Agg')
+
+        import matplotlib.pyplot as plt
+
+        plt.style.use('ggplot')
+        
         if len(self._metrics) <= 0 or len(self.epochs) <= 0:
             return
 
@@ -193,10 +203,6 @@ class TrainingLog(object):
             for idx, values in enumerate(metrics):
                 name = self._metrics[idx].name
                 metric_columns = self._metrics[idx].columns()
-
-                print(name)
-                print(metric_columns)
-                print(values)
 
                 if len(metric_columns) > 1:
                     for c_idx, column in enumerate(metric_columns):
