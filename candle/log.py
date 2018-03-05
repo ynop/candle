@@ -95,7 +95,7 @@ class TrainingLog(object):
         import matplotlib.pyplot as plt
 
         plt.style.use('ggplot')
-        
+
         if len(self._metrics) <= 0 or len(self.epochs) <= 0:
             return
 
@@ -188,35 +188,36 @@ class TrainingLog(object):
         df = pd.DataFrame(columns)
         df.to_csv(train_his_path)
 
-        columns = collections.defaultdict(list)
-        epoch_ids = []
+        if self.epochs[0].dev_log is not None:
+            columns = collections.defaultdict(list)
+            epoch_ids = []
 
-        for epoch_idx, epoch in enumerate(self.epochs):
-            losses = epoch.dev_log.mean_loss()
+            for epoch_idx, epoch in enumerate(self.epochs):
+                losses = epoch.dev_log.mean_loss()
 
-            for idx, value in enumerate(losses):
-                name = self._targets[idx].name
-                columns[name].append(value)
+                for idx, value in enumerate(losses):
+                    name = self._targets[idx].name
+                    columns[name].append(value)
 
-            metrics = epoch.dev_log.mean_metrics()
+                metrics = epoch.dev_log.mean_metrics()
 
-            for idx, values in enumerate(metrics):
-                name = self._metrics[idx].name
-                metric_columns = self._metrics[idx].columns()
+                for idx, values in enumerate(metrics):
+                    name = self._metrics[idx].name
+                    metric_columns = self._metrics[idx].columns()
 
-                if len(metric_columns) > 1:
-                    for c_idx, column in enumerate(metric_columns):
-                        columns['{} {}'.format(name, column)].append(values[c_idx])
-                else:
-                    columns['{} {}'.format(name, metric_columns[0])].append(values)
+                    if len(metric_columns) > 1:
+                        for c_idx, column in enumerate(metric_columns):
+                            columns['{} {}'.format(name, column)].append(values[c_idx])
+                    else:
+                        columns['{} {}'.format(name, metric_columns[0])].append(values)
 
-            epoch_ids.append(epoch_idx)
+                epoch_ids.append(epoch_idx)
 
-        columns = {k: np.array(v) for k, v in columns.items()}
-        columns['epoch'] = np.array(epoch_ids)
+            columns = {k: np.array(v) for k, v in columns.items()}
+            columns['epoch'] = np.array(epoch_ids)
 
-        df = pd.DataFrame(columns)
-        df.to_csv(dev_his_path)
+            df = pd.DataFrame(columns)
+            df.to_csv(dev_his_path)
 
 
 class IterationLog(object):
